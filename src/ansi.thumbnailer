@@ -1,0 +1,8 @@
+[Thumbnailer Entry]
+Version=1.0
+Encoding=UTF-8
+Type=X-Thumbnailer
+Name=ANSI Art Thumbnailer
+TryExec=ansi-thumbnailer
+Exec=ansi-thumbnailer %i %o %s
+MimeType=text/x-ansi-art;text/x-release-info

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+    <mime-type type="text/x-ansi-art">
+        <comment>ANSI</comment>
+        <generic-icon name="image-x-generic"/>
+        <glob pattern="*.ans"/>
+    </mime-type>
+    <mime-type type="text/x-release-info">
+        <comment>Release Info</comment>
+        <generic-icon name="image-x-generic"/>
+        <glob pattern="*.nfo"/>
+    </mime-type>
+</mime-info>
