@@ -6,8 +6,8 @@ GNOME desktop thumbnailer for ANSI art files (*.ans, *.nfo).
 1. Quit all Nautilus processes: `nautilus -q`
    - __Even if you currently do not have any Nautilus windows open, you should run the command above!__
 2. Delete thumbnails folder: `rm -r ~/.cache/thumbnails`
-3. Clone the repository: `git clone https://github.com/1j01/ansi-thumbnailer.git`
-4. Change directory: `cd ansi-thumbnailer`
+3. Clone the repository: `git clone https://github.com/1j01/ansi-art-thumbnailer.git`
+4. Change directory: `cd ansi-art-thumbnailer`
 5. Run make install: `sudo make install`
    - Warning: this will run PIP as root.
    - The script uses PIP to install necessary python packages. If you do not have system-wide pip installation,
