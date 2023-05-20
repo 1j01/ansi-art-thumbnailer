@@ -3,7 +3,7 @@
 import os
 import sys
 import argparse
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 # log_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'ansi-thumbnailer.log')
 # sys.stdout = open(log_file, 'w')
@@ -24,19 +24,29 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # load file
-    # with open(arguments.input, 'rb') as f:
-    #     data = f.read()
-
-    # convert to PIL
-    # img = Image.fromarray(data)
+    with open(arguments.input, 'rb') as f:
+        data = f.read()
 
     # make PIL image
     img = Image.new('RGB', (arguments.size, arguments.size), color='black')
+    draw = ImageDraw.Draw(img)
 
-    # resize to thumbnail
-    # img.thumbnail((arguments.size, arguments.size))
+    # load font
+    # font = ImageFont.truetype('fonts/ansi.ttf', 16)
+    font = ImageFont.load_default()
+
+    # draw text
+    x = 0
+    y = 0
+    for byte in data:
+        if byte == 10:
+            x = 0
+            y += 16
+        else:
+            draw.text((x, y), chr(byte), fill='white', font=font)
+            x += 8
 
     # save image
-    img.save(arguments.output, 'PNG')
+    img.save(arguments.output, 'PNG', optimize=True)
 
     sys.exit(0)
