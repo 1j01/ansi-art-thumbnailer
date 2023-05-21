@@ -188,10 +188,6 @@ if __name__ == '__main__':
     with open(arguments.input, 'r') as f:
         doc = AnsiArtDocument.from_ansi(f.read())
 
-    # make PIL image
-    img = Image.new('RGB', (arguments.size, arguments.size), color='black')
-    draw = ImageDraw.Draw(img)
-
     # load font
     # font = ImageFont.truetype('fonts/ansi.ttf', size=16, layout_engine=ImageFont.Layout.BASIC)
     # font = ImageFont.load_default()
@@ -236,7 +232,7 @@ if __name__ == '__main__':
         for file in files:
             # print(file.stem)
             if file.stem in font_names:
-                font = ImageFont.truetype(str(file), size=10, layout_engine=ImageFont.LAYOUT_BASIC)
+                font = ImageFont.truetype(str(file), size=16, layout_engine=ImageFont.LAYOUT_BASIC)
                 break
         if font:
             break
@@ -244,6 +240,10 @@ if __name__ == '__main__':
         print("Font not found, using default (built-in) font.")
         font = ImageFont.load_default()
     ch_width, ch_height = font.getsize('A')
+
+    # make PIL image
+    img = Image.new('RGB', (doc.width * ch_width, doc.height * ch_height), color='black')
+    draw = ImageDraw.Draw(img)
 
     # draw cell backgrounds
     for y in range(doc.height):
@@ -261,6 +261,9 @@ if __name__ == '__main__':
                 draw.text((x * ch_width, y * ch_height), char, font=font, fill=fg_color)
             except UnicodeEncodeError:
                 pass
+
+    # resize image
+    img.thumbnail((arguments.size, arguments.size))
 
     # save image
     img.save(arguments.output, 'PNG', optimize=True)
