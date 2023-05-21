@@ -32,7 +32,7 @@ class AnsiArtDocument:
         self.fg = [[default_fg for _ in range(width)] for _ in range(height)]
 
     @staticmethod
-    def from_ansi(text: str, default_bg: str = "#000000", default_fg: str = "#ffffff") -> 'AnsiArtDocument':
+    def from_ansi(text: str, default_bg: str = "#000000", default_fg: str = "#ffffff", max_width: int = 80) -> 'AnsiArtDocument':
         """Creates a document from the given ANSI text."""
         ansi = stransi.Ansi(text)
 
@@ -58,12 +58,16 @@ class AnsiArtDocument:
                         # This avoids an extra row if the file ends with a newline.
                     elif char == '\t':
                         x += 8 - (x % 8)
+                        if x > max_width - 1:
+                            x = max_width - 1  # I'm not sure if this is the right behavior; should it wrap?
                     elif char == '\b':
                         x -= 1
                         if x < 0:
                             x = 0
                             # on some terminals, backspace at the start of a line moves the cursor up,
                             # but we're not defining a width for the document up front, so we can't do that
+                            # (could use max_width, but since there will be some incompatibility anyway,
+                            # better to go with the simpler, more understandable behavior)
                     elif char == '\x07':
                         # ignore bell
                         # TODO: ignore other unhandled control characters
@@ -83,6 +87,9 @@ class AnsiArtDocument:
                         width = max(x + 1, width)
                         height = max(y + 1, height)
                         x += 1
+                        if x > max_width - 1:
+                            x = 0
+                            y += 1
             elif isinstance(instruction, stransi.SetColor) and instruction.color is not None:
                 # Color (I'm not sure why instruction.color would be None, but it's typed as Optional[Color])
                 # (maybe just for initial state?)
@@ -105,6 +112,7 @@ class AnsiArtDocument:
                     y = instruction.move.x
                 x = max(0, x)
                 y = max(0, y)
+                x = min(max_width - 1, x)
                 width = max(x + 1, width)
                 height = max(y + 1, height)
                 while len(document.ch) <= y:
