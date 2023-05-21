@@ -35,9 +35,7 @@ Instead, consider updating to the latest version of Ubuntu, where this issue is 
 
 The script currently assumes UTF-8 encoding, which is uncommon for ANSI art files.
 
-Once it's decoded the file, it doesn't make much use of all those code points, because the font is limited to ASCII.
-
-TODO: detect encoding, and use a font with more characters. Also, handle document sizes better.
+TODO: detect encoding
 
 # Credits
 
