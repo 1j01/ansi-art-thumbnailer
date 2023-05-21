@@ -181,6 +181,7 @@ if __name__ == '__main__':
     # check file extension
     file_extension = os.path.splitext(arguments.input)[1].lower()
     if file_extension not in [".ans", ".nfo"]:
+        print("Input file must be .ans or .nfo")
         sys.exit(1)
 
     # load file
