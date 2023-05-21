@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+from pathlib import Path
 import sys
 import argparse
 
@@ -191,8 +192,56 @@ if __name__ == '__main__':
     draw = ImageDraw.Draw(img)
 
     # load font
-    # font = ImageFont.truetype('fonts/ansi.ttf', 16)
-    font = ImageFont.load_default()
+    # font = ImageFont.truetype('fonts/ansi.ttf', size=16, layout_engine=ImageFont.Layout.BASIC)
+    # font = ImageFont.load_default()
+    # Pillow actually looks in most of these system font folders by default.
+    font_dirs = [
+        # Windows
+        R"C:\Windows\Fonts",
+        R"C:\WINNT\Fonts",
+        R"%LocalAppData%\Microsoft\Windows\Fonts", # (fonts installed only for the current user)
+        # macOS
+        "/Library/Fonts",
+        "/System/Library/Fonts",
+        "~/Library/Fonts", # (fonts installed only for the current user)
+        # Linux:
+        # "/usr/share/fonts", # handled more generally below:
+        *[data_dir + "/fonts" for data_dir in os.environ.get("XDG_DATA_DIRS", "/usr/share").split(":")],
+        "/usr/local/share/fonts",
+        "~/.fonts", # (fonts installed only for the current user)
+        # Android:
+        "/system/fonts",
+        "/data/fonts",
+    ]
+    font_names = [
+        "NotoSansMono",
+        "DejaVuSansMono",
+        "LiberationMono",
+        "UbuntuMono",
+        "Hack",
+        "FiraMono",
+        "Inconsolata",
+        "SourceCodePro",
+        "DroidSansMono",
+        "Consolas",
+        "CourierNew",
+        "LucidaConsole",
+        "Monaco",
+    ]
+    font = None
+    for font_dir in font_dirs:
+        path = Path(os.path.expandvars(os.path.expanduser(font_dir)))
+        files = path.glob("**/*.ttf")
+        for file in files:
+            # print(file.stem)
+            if file.stem in font_names:
+                font = ImageFont.truetype(str(file), size=10, layout_engine=ImageFont.LAYOUT_BASIC)
+                break
+        if font:
+            break
+    if not font:
+        print("Font not found, using default (built-in) font.")
+        font = ImageFont.load_default()
     ch_width, ch_height = font.getsize('A')
 
     # draw cell backgrounds
