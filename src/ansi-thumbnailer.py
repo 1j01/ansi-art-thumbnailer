@@ -185,8 +185,16 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # load file
-    with open(arguments.input, 'r') as f:
-        doc = AnsiArtDocument.from_ansi(f.read())
+    with open(arguments.input, 'rb') as f:
+        b = f.read()
+        try:
+            content = b.decode('utf-8')
+        except UnicodeDecodeError:
+            content = b.decode('cp437', errors='replace')
+            # content = b.decode('windows-1252', errors='replace')
+
+        doc = AnsiArtDocument.from_ansi(content)
+        # print(doc.width, doc.height, doc.ch, doc.bg, doc.fg, repr(content), len(content), len(b))
 
     # load font
     # font = ImageFont.truetype('fonts/ansi.ttf', size=16, layout_engine=ImageFont.Layout.BASIC)
