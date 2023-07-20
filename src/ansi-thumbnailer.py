@@ -211,27 +211,40 @@ if __name__ == '__main__':
         "/data/fonts",
     ]
     font_names = [
-        "NotoSansMono",
-        "DejaVuSansMono",
-        "LiberationMono",
-        "UbuntuMono",
+        "Noto Sans Mono", # first because of broad Unicode coverage ("Noto" stands for "no tofu", i.e. replacement characters that look like blocks of tofu)
+        # The rest of this list is not very deliberately ordered (or curated) yet.
+        "Cascadia Mono", # Cascadia Code without ligatures; drawing cell by cell, ligatures won't apply anyways
+        "Cascadia Code",
+        "DejaVu Sans Mono",
+        "Liberation Mono",
+        "Ubuntu Mono",
         "Hack",
-        "FiraMono",
+        "Fira Mono",
         "Inconsolata",
-        "SourceCodePro",
-        "DroidSansMono",
+        "Source Code Pro",
+        "Droid Sans Mono",
         "Consolas",
-        "CourierNew",
-        "LucidaConsole",
+        "Consola",
+        "Courier New",
+        "Lucida Console",
         "Monaco",
+        "Menlo",
+        "Andale Mono",
+        "Cour",
     ]
+    def normalize_font_name(name: str) -> str:
+        return name.lower().replace(" ", "").replace("-", "").replace("_", "")
+    font_names = [normalize_font_name(name) for name in font_names]
+
     font = None
     for font_dir in font_dirs:
         path = Path(os.path.expandvars(os.path.expanduser(font_dir)))
         files = path.glob("**/*.ttf")
+        files = list(files) # printing consumes the generator without this!
+        # print("path", path, "files", "\n".join(map(str, files)))
         for file in files:
-            # print(file.stem)
-            if file.stem in font_names:
+            # print(f"stem {file.stem!r}", normalize_font_name(file.stem) in font_names)
+            if normalize_font_name(file.stem) in font_names:
                 font = ImageFont.truetype(str(file), size=16, layout_engine=ImageFont.LAYOUT_BASIC)
                 break
         if font:
